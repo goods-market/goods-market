@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Best Goods in Market</title>
+<style>
+:root {
+  --site-primary: #173f35;
+  --site-on-primary: #ffffff;
+  --site-secondary: #f1b84b;
+  --site-on-secondary: #18251f;
+  --site-background: #f8f7f2;
+  --site-on-background: #202923;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); color: var(--site-on-background); background: var(--site-background); }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
+a { color: inherit; }
+.topbar { background: var(--site-primary); color: var(--site-on-primary); text-align: center; padding: 10px 16px; font-size: 13px; letter-spacing: .04em; }
+header { background: var(--site-background); border-bottom: 1px solid #e4e5dd; }
+.header-inner { max-width: 1180px; margin: auto; padding: calc(20px * var(--site-spacing-scale)) 22px; display: flex; align-items: center; gap: 24px; justify-content: space-between; }
+.brand { font-weight: 850; line-height: 1.05; font-size: 18px; letter-spacing: -.04em; color: var(--site-primary); text-decoration: none; }
+.brand span { display: block; font-size: 10px; letter-spacing: .2em; margin-top: 5px; color: #737b72; }
+nav { display: flex; gap: 22px; font-size: 14px; }
+nav a { text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+.cart { border: 1px solid #d8dbd1; border-radius: calc(999px * var(--site-radius-scale)); padding: 10px 14px; background: transparent; color: var(--site-on-background); cursor: pointer; }
+.hero { background: var(--site-primary); color: var(--site-on-primary); overflow: hidden; }
+.hero-inner { max-width: 1180px; margin: auto; padding: clamp(48px, 8vw, 92px) 22px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+.eyebrow { color: var(--site-secondary); text-transform: uppercase; font-size: 12px; font-weight: 800; letter-spacing: .19em; }
+h1 { font-family: var(--site-font-heading); font-weight: 500; font-size: clamp(42px, 6vw, 72px); line-height: 1.02; letter-spacing: -.04em; margin: 18px 0; }
+h1 em { color: var(--site-secondary); font-weight: 400; }
+.hero p { color: #e1e9e2; max-width: 480px; line-height: 1.7; font-size: 16px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 18px; border-radius: calc(999px * var(--site-radius-scale)); font-weight: 750; text-decoration: none; border: 1px solid transparent; cursor: pointer; }
+.btn.gold { background: var(--site-secondary); color: var(--site-on-secondary); }
+.btn.outline { color: white; border-color: #789087; background: transparent; }
+.hero-art { min-height: 300px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; transform: rotate(2deg); }
+.art-tile { min-height: 135px; border-radius: calc(22px * var(--site-radius-scale)); display: flex; flex-direction: column; justify-content: space-between; padding: 18px; color: #202923; }
+.art-tile:nth-child(1) { background: #f1b84b; grid-row: span 2; }
+.art-tile:nth-child(2) { background: #d8e5d6; }
+.art-tile:nth-child(3) { background: #e9d4c3; }
+.art-tile:nth-child(4) { background: #e5e8df; grid-column: span 2; min-height: 90px; }
+.art-emoji { font-size: clamp(36px, 5vw, 60px); }
+.art-label { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+main { max-width: 1180px; margin: auto; padding: 55px 22px 72px; }
+.section-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 24px; }
+h2 { font-family: var(--site-font-heading); font-weight: 500; font-size: calc(36px * var(--site-heading-scale)); margin: 0 0 8px; letter-spacing: -.03em; }
+.muted { color: #737b72; line-height: 1.6; margin: 0; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 25px 0; }
+.filter { border: 1px solid #d9ddd3; border-radius: calc(999px * var(--site-radius-scale)); padding: 9px 14px; background: transparent; color: var(--site-on-background); cursor: pointer; }
+.filter.active { background: var(--site-primary); border-color: var(--site-primary); color: white; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.product { background: #fff; border: 1px solid #e9e9e1; border-radius: calc(18px * var(--site-radius-scale)); overflow: hidden; }
+.product-visual { min-height: 165px; display: grid; place-items: center; background: #f1f0e9; font-size: 58px; }
+.product:nth-child(4n+2) .product-visual { background: #e7eee5; }
+.product:nth-child(4n+3) .product-visual { background: #f4e5d4; }
+.product:nth-child(4n+4) .product-visual { background: #e7e8ef; }
+.product-body { padding: 16px; }
+.category { color: #747b71; text-transform: uppercase; font-size: 10px; letter-spacing: .13em; font-weight: 800; }
+.product h3 { font-size: 16px; margin: 8px 0 6px; }
+.product p { color: #737b72; font-size: 13px; line-height: 1.5; margin: 0 0 14px; }
+.product-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.price { font-weight: 850; color: var(--site-primary); }
+.add { border: 0; background: var(--site-primary); color: white; border-radius: 50%; width: 36px; height: 36px; font-size: 21px; cursor: pointer; }
+.add:hover, .btn:hover { filter: brightness(1.07); }
+.info-strip { margin-top: 58px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.info { border: 1px solid #e2e4dc; border-radius: calc(16px * var(--site-radius-scale)); padding: 22px; }
+.info strong { display: block; margin: 10px 0 6px; }
+.info p { margin: 0; color: #737b72; font-size: 13px; line-height: 1.6; }
+footer { background: #142f28; color: #f8f7f2; padding: 35px 22px; }
+.footer-inner { max-width: 1180px; margin: auto; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+footer p { color: #c8d4cc; font-size: 13px; }
+.modal-backdrop { position: fixed; inset: 0; background: #0008; display: none; align-items: center; justify-content: center; padding: 20px; z-index: 5; }
+.modal-backdrop.show { display: flex; }
+.modal { background: #fff; color: #202923; width: min(480px, 100%); border-radius: 20px; padding: 24px; max-height: 85vh; overflow: auto; }
+.modal h2 { font-size: 30px; }
+.cart-line { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e6e7df; }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.modal .btn.outline { color: #173f35; border-color: #cdd4cb; }
+.empty { color: #737b72; padding: 18px 0; }
+@media (max-width: 760px) {
+ .header-inner { flex-wrap: wrap; gap: 14px; }
+ nav { order: 3; width: 100%; justify-content: space-between; gap: 10px; font-size: 13px; }
+ .hero-inner { grid-template-columns: 1fr; }
+ .hero-art { min-height: 260px; max-width: 480px; width: 100%; }
+ .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+ .product-visual { min-height: 130px; }
+ .info-strip { grid-template-columns: 1fr; }
+ .section-head { align-items: start; flex-direction: column; }
+}
+@media (max-width: 380px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">A little something for every day · Browse our market</div>
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="#" aria-label="Best Goods in Market home">BEST GOODS <span>IN MARKET</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#shop">Shop all</a><a href="#why-us">Why shop with us</a><a href="#contact">Contact</a>
+      </nav>
+      <button class="cart" id="open-cart">🛒 Cart <span id="cart-count">0</span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Welcome to your everyday market</div>
+        <h1>Good finds.<br><em>Great value.</em></h1>
+        <p>Discover useful everyday goods, thoughtful finds, and little things that make life better—all in one place.</p>
+        <div class="actions"><a class="btn gold" href="#shop">Explore products&nbsp; ↓</a><a class="btn outline" href="#contact">How to order</a></div>
+      </div>
+      <div class="hero-art" aria-label="Illustrations representing market products">
+        <div class="art-tile"><span class="art-emoji">👜</span><span class="art-label">Style & essentials</span></div>
+        <div class="art-tile"><span class="art-emoji">🎧</span><span class="art-label">Tech finds</span></div>
+        <div class="art-tile"><span class="art-emoji">✨</span><span class="art-label">Everyday favourites</span></div>
+        <div class="art-tile"><span class="art-label">A market made for discovering something good.</span></div>
+      </div>
+    </div>
+  </section>
+  <main>
+    <section id="shop">
+      <div class="section-head"><div><div class="eyebrow" style="color:#6c806f">The collection</div><h2>Explore the market</h2><p class="muted">Sample products below—replace these with your real items and prices.</p></div></div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-category="All">All goods</button>
+        <button class="filter" data-category="Fashion">Fashion</button>
+        <button class="filter" data-category="Electronics">Electronics</button>
+        <button class="filter" data-category="Home">Home</button>
+        <button class="filter" data-category="Beauty">Beauty</button>
+      </div>
+      <div class="grid" id="product-grid"></div>
+    </section>
+    <section class="info-strip" id="why-us">
+      <div class="info"><div>📦</div><strong>Goods for everyday life</strong><p>A growing mix of products across categories, all shown in one convenient place.</p></div>
+      <div class="info"><div>💬</div><strong>Easy ordering</strong><p>Give shoppers a clear way to ask questions and confirm availability before buying.</p></div>
+      <div class="info"><div>🔒</div><strong>Shop with confidence</strong><p>Share clear product details, delivery terms, and a reliable way to reach your store.</p></div>
+    </section>
+    <section id="contact" style="padding-top:56px">
+      <div class="section-head"><div><div class="eyebrow" style="color:#6c806f">Let's connect</div><h2>Ready to find your next favourite?</h2><p class="muted">Contact details can be added here before publishing.</p></div></div>
+      <p class="muted">Add your WhatsApp number or business email to receive order enquiries. Online card payments need a payment provider and setup before the store can accept real payments.</p>
+    </section>
+  </main>
+  <footer><div class="footer-inner"><div><strong>BEST GOODS IN MARKET</strong><p>Good finds for everyday life.</p></div><p>© <span id="year"></span> Best Goods in Market · Store preview</p></div></footer>
+</div>
+<div class="modal-backdrop" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+  <div class="modal">
+    <h2 id="cart-title">Your cart</h2>
+    <div id="cart-items"></div>
+    <p class="muted" id="cart-total"></p>
+    <div class="modal-actions"><button class="btn gold" id="checkout">Order enquiry</button><button class="btn outline" id="close-cart">Continue shopping</button></div>
+    <p class="muted" style="font-size:12px;margin-top:14px">Demo only: checkout and card payments are not connected yet.</p>
+  </div>
+</div>
+<script>
+const products = [
+ {id:1,name:"Everyday Tote Bag",category:"Fashion",price:18,icon:"👜",desc:"A handy carry-all for busy days."},
+ {id:2,name:"Wireless Headphones",category:"Electronics",price:35,icon:"🎧",desc:"Your music, wherever you go."},
+ {id:3,name:"Cozy Home Mug",category:"Home",price:12,icon:"☕",desc:"A favourite cup for slow mornings."},
+ {id:4,name:"Glow Care Set",category:"Beauty",price:24,icon:"🧴",desc:"A simple self-care gift idea."},
+ {id:5,name:"Classic Sneakers",category:"Fashion",price:42,icon:"👟",desc:"Everyday comfort and easy style."},
+ {id:6,name:"Portable Speaker",category:"Electronics",price:29,icon:"🔊",desc:"Bring a little sound to your day."},
+ {id:7,name:"Soft Cushion",category:"Home",price:20,icon:"🛋️",desc:"A comfortable touch for your space."},
+ {id:8,name:"Beauty Essentials",category:"Beauty",price:16,icon:"💄",desc:"Small essentials for your routine."}
+];
+const cart = {};
+let activeCategory = "All";
+const money = n => "$" + n.toFixed(2);
+function renderProducts() {
+ const visible = products.filter(p => activeCategory === "All" || p.category === activeCategory);
+ document.getElementById("product-grid").innerHTML = visible.map(p => `
+ <article class="product"><div class="product-visual" aria-hidden="true">${p.icon}</div><div class="product-body">
+ <div class="category">${p.category}</div><h3>${p.name}</h3><p>${p.desc}</p>
+ <div class="product-bottom"><span class="price">${money(p.price)}</span><button class="add" aria-label="Add ${p.name} to cart" data-add="${p.id}">+</button></div>
+ </div></article>`).join("");
+ document.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => {
+   const id = Number(b.dataset.add); cart[id] = (cart[id] || 0) + 1; updateCartCount(); b.textContent = "✓"; setTimeout(() => b.textContent = "+", 700);
+ }));
+}
+function updateCartCount() { document.getElementById("cart-count").textContent = Object.values(cart).reduce((a,b)=>a+b,0); }
+function renderCart() {
+ const entries = products.filter(p => cart[p.id]);
+ const box = document.getElementById("cart-items");
+ box.innerHTML = entries.length ? entries.map(p => `<div class="cart-line"><span>${p.icon} ${p.name} × ${cart[p.id]}</span><strong>${money(p.price * cart[p.id])}</strong></div>`).join("") : '<div class="empty">Your cart is empty. Add a product to get started.</div>';
+ document.getElementById("cart-total").textContent = entries.length ? "Demo total: " + money(entries.reduce((s,p)=>s+p.price*cart[p.id],0)) : "";
+}
+document.getElementById("filters").addEventListener("click", e => {
+ const b = e.target.closest("[data-category]"); if (!b) return;
+ activeCategory = b.dataset.category;
+ document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active", x===b)); renderProducts();
+});
+const modal = document.getElementById("cart-modal");
+document.getElementById("open-cart").addEventListener("click",()=>{renderCart();modal.classList.add("show");});
+document.getElementById("close-cart").addEventListener("click",()=>modal.classList.remove("show"));
+modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show");});
+document.getElementById("checkout").addEventListener("click",()=>{
+ alert("This is a website preview. Add your real contact details and connect an order/payment service before taking customer orders.");
+});
+document.getElementById("year").textContent = new Date().getFullYear();
+renderProducts();
+</script>
+</body>
+</html>
